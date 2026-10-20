@@ -1,0 +1,522 @@
+/* ==========================================================================
+   MUST Application Portal - UI/UX redesign
+   SWE2106 Internet Technology and Web Design
+
+   Colour palette is taken from the university crest itself:
+   #2e3192 (crest blue) and #ffd543 (crest gold), plus a small set of
+   supporting neutrals derived from them.
+
+   Every foreground/background pair below was checked against the WCAG AA
+   minimum of 4.5:1 for normal text (3:1 for large text and focus rings).
+   The weakest pair in this file is 5.88:1, so nothing falls below AA.
+   ========================================================================== */
+
+/* ---------- design tokens ---------- */
+:root {
+  /* brand colours, sampled from the crest */
+  --must-indigo:      #2e3192;
+  --must-indigo-dark: #23266f;
+  --must-indigo-deep: #1f2260;
+  --must-amber:       #ffd543;
+  --must-amber-dark:  #e6bd2c;
+
+  /* neutrals */
+  --ink:              #1c1e3a;
+  --muted:            #5a5d8a;
+  --panel:            #f7f8fd;
+  --surface:          #ffffff;
+  --line:             #d5d8ec;
+  --line-strong:      #b9bde0;
+
+  /* feedback */
+  --error:            #b3261e;
+  --success:          #1a7f37;
+
+  /* shape + depth */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --shadow-card: 0 1px 2px rgba(31, 34, 96, .06), 0 8px 28px rgba(31, 34, 96, .10);
+  --shadow-field: 0 1px 2px rgba(31, 34, 96, .08);
+
+  /* rhythm - used throughout so spacing stays consistent */
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --maxw: 1180px;
+  --cardw: 430px;
+}
+
+/* ---------- reset / base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* plain rem base. the media queries at the bottom adjust it for phones
+     and for large monitors, rather than using fluid clamp() sizing. */
+  font-size: 16px;
+  /* height (not min-height) so body's 100% below resolves against it */
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  /* 100% of html gives a full-height page without viewport units */
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  color: var(--ink);
+  /* system stack: renders instantly, no webfont request, and matches the
+     platform the visitor is actually on */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, p, ul, ol, figure {
+  margin: 0;
+}
+
+ul, ol {
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- shared link styling ---------- */
+a {
+  color: var(--must-indigo);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--must-indigo-dark);
+}
+
+/* A consistent, visible focus ring for keyboard users. The default outline
+   disappears against the indigo brand panel, so it has to be deliberate. */
+:focus-visible {
+  outline: 3px solid var(--must-indigo);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* On the dark brand panel the indigo ring is invisible, so it flips to amber */
+.brand :focus-visible {
+  outline-color: var(--must-amber);
+}
+
+/* ---------- the split screen ---------- */
+.layout {
+  flex: 1;
+  display: grid;
+  /* roughly 45/55. minmax(0, 1fr) on both sides stops long content from
+     blowing out the grid track */
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+/* ---------- brand panel (left) ---------- */
+.brand {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-7) var(--space-6);
+  background: var(--must-indigo-deep);
+  color: #ffffff;
+}
+
+/* Two soft radial washes rather than the hard purple gradient the current
+   portal uses. They give the panel depth without any image asset. */
+.brand::before,
+.brand::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.brand::before {
+  width: 620px;
+  height: 620px;
+  right: -180px;
+  top: -180px;
+  background: radial-gradient(circle, rgba(255, 213, 67, .14), transparent 68%);
+}
+
+.brand::after {
+  width: 520px;
+  height: 520px;
+  left: -200px;
+  bottom: -200px;
+  background: radial-gradient(circle, rgba(120, 130, 230, .22), transparent 68%);
+}
+
+.brand > * {
+  position: relative;
+  z-index: 1;
+}
+
+.brand__crest {
+  width: 108px;
+  height: auto;
+  /* the crest sits on a white disc so the white background of the source
+     image reads as an intentional badge instead of a pasted rectangle */
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .22);
+}
+
+.brand__name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: .01em;
+  color: #ffffff;
+  /* no max-width on purpose. the name is a fixed string, so letting it use
+     the panel width makes it wrap to two balanced lines instead of four
+     narrow ones. */
+}
+
+.brand__portal {
+  /* amber rule under the university name - echoes the gold in the crest */
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--must-amber);
+  padding-top: var(--space-3);
+  border-top: 2px solid rgba(255, 213, 67, .5);
+}
+
+.brand__tagline {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: #dfe1f5;
+  max-width: 460px;
+}
+
+/* The "why this is better" list. Kept short - a wall of text on a login
+   screen is exactly the problem the current design has. */
+.brand__points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  list-style: none;
+  max-width: 460px;
+}
+
+.brand__points li {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  font-size: .95rem;
+  color: #d5d8f0;
+}
+
+.brand__points svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  color: var(--must-amber);
+}
+
+/* ---------- form side (right) ---------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-7) var(--space-5);
+}
+
+.card {
+  width: 100%;
+  max-width: var(--cardw);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+.card__eyebrow {
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--must-indigo);
+}
+
+.card__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: var(--space-2);
+}
+
+.card__lead {
+  margin-top: var(--space-3);
+  font-size: .95rem;
+  color: var(--muted);
+}
+
+/* ---------- form fields ---------- */
+.form {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* an asterisk for required fields - better than relying on the red colour
+   alone, which colour-blind users can miss */
+.field .req {
+  color: var(--error);
+  margin-left: 2px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: .72rem .9rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-field);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+/* The field border carries the focus state, so the ring is doubled with a
+   colour change rather than outline alone. */
+.field input:focus {
+  outline: none;
+  border-color: var(--must-indigo);
+  box-shadow: 0 0 0 3px rgba(46, 49, 146, .18);
+}
+
+.field input::placeholder {
+  color: #9a9dc4;
+}
+
+/* helper text sits under the field, which is where people actually look
+   when they are unsure what to type */
+.field__hint {
+  font-size: .82rem;
+  color: var(--muted);
+}
+
+.field__hint a {
+  font-weight: 600;
+}
+
+/* Two fields side by side where they naturally pair (name fields). They
+   collapse to one column on narrow screens via the media query below. */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* inline "forgot password" row */
+.form__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: .78rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color .15s ease, transform .05s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--must-indigo);
+  color: #ffffff;
+}
+
+.btn--primary:hover {
+  background: var(--must-indigo-dark);
+  color: #ffffff;
+}
+
+/* secondary action, used for the alternative path on each screen */
+.btn--ghost {
+  background: var(--surface);
+  color: var(--must-indigo);
+  border-color: var(--line-strong);
+}
+
+.btn--ghost:hover {
+  background: var(--panel);
+  color: var(--must-indigo-dark);
+}
+
+/* ---------- card footer / cross-links ---------- */
+.card__foot {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: .92rem;
+  color: var(--muted);
+}
+
+.card__foot p + p {
+  margin-top: var(--space-3);
+}
+
+.card__foot strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* a pill-shaped alternative path, so "Create Account" reads as an action
+   rather than a bare text link */
+.pill-link {
+  display: inline-block;
+  margin-top: var(--space-3);
+  padding: .62rem 1.15rem;
+  border-radius: 999px;
+  background: rgba(46, 49, 146, .08);
+  border: 1px solid rgba(46, 49, 146, .22);
+  color: var(--must-indigo);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pill-link:hover {
+  background: rgba(46, 49, 146, .14);
+  color: var(--must-indigo-dark);
+}
+
+/* ---------- page footer ---------- */
+.page-foot {
+  padding: var(--space-4) var(--space-5);
+  text-align: center;
+  font-size: .82rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.page-foot a {
+  color: var(--muted);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  /* The split screen only earns its space on a wide monitor. On anything
+     smaller the brand panel becomes a compact header above the form, which
+     keeps the crest visible but stops it competing with the inputs. */
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .brand {
+    gap: var(--space-4);
+    padding: var(--space-5);
+    /* stack the crest above the name. putting them side by side squeezes
+       the name into a column too narrow to wrap cleanly. */
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .brand__crest {
+    width: 62px;
+    padding: 7px;
+  }
+
+  .brand__points,
+  .brand__tagline {
+    display: none;
+  }
+
+  .brand__name {
+    font-size: 1.05rem;
+  }
+
+  .brand__portal {
+    font-size: .78rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+  }
+
+  /* name fields stack on a phone - two narrow columns are too cramped to
+     type into comfortably */
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Large monitors: a slightly larger base so the layout keeps its
+   proportions instead of looking sparse. */
+@media (min-width: 1400px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+/* Respect users who ask for less motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

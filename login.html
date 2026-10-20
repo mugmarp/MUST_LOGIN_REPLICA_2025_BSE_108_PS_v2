@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- viewport meta is required for the layout to reflow correctly on phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In &mdash; MUST Online Application Portal</title>
+
+    <!--
+      Search / preview metadata.
+      The description is the line search engines show under the title, so it
+      has to describe what this page actually does in one sentence.
+    -->
+    <meta name="description" content="Sign in to the Mbarara University of Science and Technology Online Application Portal to access your application dashboard.">
+    <meta name="robots" content="index, follow">
+
+    <!-- theme-color tints the browser bar on mobile to match the portal -->
+    <meta name="theme-color" content="#1f2260">
+
+    <!-- the shared stylesheet holds every colour, spacing and layout rule so
+         login.html and signup.html stay visually identical -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!--
+      The whole page is a two-column grid: brand identity on the left, the
+      working form on the right. On a narrow screen this collapses to a single
+      column and the brand becomes a header, handled in styles.css.
+    -->
+    <div class="layout">
+
+        <!--
+          Brand panel. Uses <aside> because this content is supporting context
+          for the main task rather than the task itself.
+        -->
+        <aside class="brand">
+            <!-- The real university crest. It is referenced from media/ rather
+                 than inlined so the browser can cache it across both pages. -->
+            <img class="brand__crest" src="media/campus_logo.png"
+                 alt="Crest of Mbarara University of Science and Technology">
+
+            <div>
+                <h1 class="brand__name">MBARARA UNIVERSITY OF SCIENCE AND TECHNOLOGY</h1>
+                <p class="brand__portal">Online Application Portal</p>
+            </div>
+
+            <p class="brand__tagline">
+                Apply, track and manage your admission from one place. Sign in
+                to continue to your application dashboard.
+            </p>
+
+            <!-- Short reassurance list. Kept to three points on purpose: a
+                 login screen should explain itself in seconds, not paragraphs. -->
+            <ul class="brand__points">
+                <li>
+                    <!-- inline SVG, no icon-font dependency -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="4" y="10" width="16" height="10" rx="2"></rect>
+                        <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                    </svg>
+                    Your details stay with the university. Nothing is shared with third parties.
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 7v5l3 3"></path>
+                    </svg>
+                    Check your application status at any time, from any device.
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 3l7 4v5c0 4-3 7-7 9-4-2-7-5-7-9V7z"></path>
+                        <path d="M9 12l2 2 4-4"></path>
+                    </svg>
+                    Need help? The application guide walks you through every step.
+                </li>
+            </ul>
+        </aside>
+
+        <!-- The form column -->
+        <main class="panel">
+            <section class="card" aria-labelledby="login-title">
+                <p class="card__eyebrow">Sign in</p>
+                <h2 class="card__title" id="login-title">Welcome Back</h2>
+                <p class="card__lead">Log in to access your application dashboard</p>
+
+                <!--
+                  action="#" is a placeholder. This is a front-end redesign only,
+                  so the form has nowhere to submit to yet - the real portal posts
+                  to https://applications.must.ac.ug/index.php.
+                -->
+                <form class="form" action="#" method="post">
+
+                    <!--
+                      Each field is a <label> tied to its input by for/id.
+                      The original portal used placeholder text instead of labels,
+                      which disappears the moment you start typing. Real labels
+                      also give screen readers something to announce.
+                    -->
+                    <div class="field">
+                        <label for="email">Email Address<span class="req" aria-hidden="true">*</span></label>
+                        <input type="email" id="email" name="email"
+                               placeholder="name@example.com"
+                               autocomplete="email" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password<span class="req" aria-hidden="true">*</span></label>
+                        <!-- type="password" rather than type="text": the live
+                             portal used type="text" here, so the password was
+                             visible on screen. Correcting that is part of the
+                             redesign. -->
+                        <input type="password" id="password" name="password"
+                               placeholder="Enter your password"
+                               autocomplete="current-password" required>
+                    </div>
+
+                    <!-- Forgot-password sits next to the button it belongs to,
+                         not stranded at the bottom of the card. -->
+                    <div class="form__row">
+                        <a href="signup.html">Forgot your password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary">Sign In</button>
+                </form>
+
+                <div class="card__foot">
+                    <p>New to the portal?</p>
+                    <!-- Cross-link to the sign-up screen. A pill rather than a
+                         bare link so the alternative path reads as an action. -->
+                    <a class="pill-link" href="signup.html">Create Account</a>
+
+                    <p>
+                        Not sure how it works? Read the
+                        <a href="https://applications.must.ac.ug/sims-application-guide.pdf">application guide</a>.
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="page-foot">
+        <p>&copy; 2026 Mbarara University of Science and Technology &middot;
+           <a href="signup.html">Create an account</a></p>
+    </footer>
+</body>
+</html>

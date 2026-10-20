@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account &mdash; MUST Online Application Portal</title>
+
+    <!--
+      Search / preview metadata.
+      Description kept to one sentence describing what this page does.
+    -->
+    <meta name="description" content="Create an account for the Mbarara University of Science and Technology Online Application Portal to start your admission application.">
+    <meta name="robots" content="index, follow">
+
+    <meta name="theme-color" content="#1f2260">
+
+    <!-- same shared stylesheet as the login screen, so the two pages are
+         visually one system rather than two lookalikes -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="layout">
+
+        <!--
+          Brand panel, identical to the login screen so the two pages feel
+          like one product. aria-hidden is not used here because the
+          university name is meaningful, but the decorative SVGs inside it
+          are marked aria-hidden so screen readers skip them.
+        -->
+        <aside class="brand">
+            <img class="brand__crest" src="media/campus_logo.png"
+                 alt="Crest of Mbarara University of Science and Technology">
+
+            <div>
+                <h1 class="brand__name">MBARARA UNIVERSITY OF SCIENCE AND TECHNOLOGY</h1>
+                <p class="brand__portal">Online Application Portal</p>
+            </div>
+
+            <p class="brand__tagline">
+                Create your account to start an application, upload your
+                documents and follow your admission through to the decision.
+            </p>
+
+            <ul class="brand__points">
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M19 8v6M16 11h6"></path>
+                    </svg>
+                    One account covers every programme you apply for.
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    A temporary password is emailed to you straight away.
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                        <path d="M8 7h8M8 11h8M8 15h5"></path>
+                    </svg>
+                    You can save and return to your application later.
+                </li>
+            </ul>
+        </aside>
+
+        <main class="panel">
+            <section class="card" aria-labelledby="signup-title">
+                <p class="card__eyebrow">Get started</p>
+                <h2 class="card__title" id="signup-title">Create Account</h2>
+                <p class="card__lead">Provide your details to receive a temporary password.</p>
+
+                <!--
+                  action="#" is a placeholder - this is a front-end redesign
+                  only. The real portal posts to
+                  https://applications.must.ac.ug/index.php with name="sign_up".
+                -->
+                <form class="form" action="#" method="post">
+
+                    <!--
+                      Surname and Other Names are a natural pair, so they share
+                      a two-column row. They stack on phones via a media query.
+                    -->
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="surname">Surname<span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="surname" name="app_login_surname_name"
+                                   placeholder="Surname" maxlength="100"
+                                   autocomplete="family-name" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="other-names">Other Names<span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="other-names" name="app_login_other_names"
+                                   placeholder="Other names" maxlength="100"
+                                   autocomplete="given-name" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Phone Number<span class="req" aria-hidden="true">*</span></label>
+                        <!-- type="tel" rather than type="text": on a phone this
+                             brings up the numeric keypad, and it marks the field
+                             as a phone number to assistive tech. pattern keeps
+                             the entry to digits and spaces. -->
+                        <input type="tel" id="phone" name="app_login_phone"
+                               placeholder="0770000000" minlength="10" maxlength="14"
+                               pattern="[0-9 ]{10,14}"
+                               autocomplete="tel" required>
+                        <p class="field__hint">Use an active phone number to receive notifications.</p>
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email Address<span class="req" aria-hidden="true">*</span></label>
+                        <input type="email" id="email" name="app_login_email"
+                               placeholder="myemail@gmail.com" maxlength="50"
+                               autocomplete="email" required>
+                        <p class="field__hint">
+                            Don't have an email?
+                            <a href="https://accounts.google.com/signup/v2/createaccount?flowName=GlifWebSignIn&flowEntry=SignUp">Click to create one</a>
+                        </p>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary">Create Account</button>
+                </form>
+
+                <div class="card__foot">
+                    <p>Already have an account?</p>
+                    <a class="pill-link" href="login.html">Sign In</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="page-foot">
+        <p>&copy; 2026 Mbarara University of Science and Technology &middot;
+           <a href="login.html">Sign in</a></p>
+    </footer>
+</body>
+</html>
